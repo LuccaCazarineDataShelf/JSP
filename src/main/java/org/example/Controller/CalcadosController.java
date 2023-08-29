@@ -9,38 +9,66 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
-@Controller
-@RequestMapping("/calcados")
+/*@Controller
+@RequestMapping("/calcados")*/
 public class CalcadosController {
     private CalcadosDAO calcadosDAO;
 
+    @Autowired
     public CalcadosController(CalcadosDAO calcadosDAO) {
         this.calcadosDAO = calcadosDAO;
     }
 
-    @RequestMapping(value = "/adicionar", method = RequestMethod.POST)
-    public void adicionarCalcado(float tamanho, String categoria, String cor, float preco, String marca, double dataCadastro, int qtdEstoque, String descricao, int calcadoId){
+    @GetMapping("/adicionar")
+    /*public void adicionarCalcado(float tamanho, String categoria, String cor, float preco, String marca, double dataCadastro, int qtdEstoque, String descricao, int calcadoId){
         CalcadosModel calcadosModel = new CalcadosModel(tamanho, categoria, cor, preco, marca, dataCadastro, qtdEstoque, descricao, calcadoId);
         CalcadosDAO calcadoDAO = new CalcadosDAO();
-        calcadoDAO.adicionarCalcado(calcadosModel);
+        calcadoDAO.adicionarCalcado(calcadosModel);*/
+    public String adicionarCalcadoForm(Model model){
+        model.addAttribute("calcado", new CalcadosModel());
+        return "adicionarCalcadoForm";
     }
-    @RequestMapping(value = "/editar", method = RequestMethod.POST)
-    public CalcadosModel buscarCalcado(int idCalcado){
+    @PostMapping("/adicionar")
+    public String adicionarCalcado(@ModelAttribute CalcadosModel calcado){
+        calcadosDAO.adicionarCalcado(calcado);
+        return "redirect:/calcados/listar";
+    }
+    @GetMapping("/editar/{idCalcado}")
+    public String editarCalcadoForm(@PathVariable int idCalcado, Model model){
+        CalcadosModel calcado = calcadosDAO.buscarCalcadoPorId(idCalcado);
+        model.addAttribute("calcado", calcado);
+        return "editarCalcadoForm";
+    }
+
+    @RequestMapping("/editar/{idCalcado}")
+    /*public CalcadosModel buscarCalcado(int idCalcado){
         return  calcadosDAO.buscarCalcadoPorId(idCalcado);
+    }*/
+    public String editarCalcado(@PathVariable int idCalcado, @ModelAttribute CalcadosModel calcado){
+        calcadosDAO.editarCalcado(calcado);
+        return "redirect:/calcados/listar";
     }
+    /*
     public void editarCalcado(int idCalcado, float novoTamanho, String novaCategoria, String novaCor, float novoPreco, String novaMarca, int novaQtdEstoque, String novaDescricao, int novoProdutoId){
         CalcadosModel calcadosModel = new CalcadosModel(idCalcado, novoTamanho, novaCategoria, novaCor, novoPreco, novaMarca, novaQtdEstoque, novaDescricao);
         calcadosDAO.adicionarCalcado(calcadosModel);
-    }
-    @RequestMapping(value = "/excluir", method = RequestMethod.POST)
-    public void excluirCalcado(int idCalcado){
+    }*/
+    @GetMapping("/excluir/{idCalcado}")
+    public String excluirCalcado(@PathVariable int idCalcado) {
         calcadosDAO.excluirCalcado(idCalcado);
+        return"redirect:/calcados/listar";
+    }
+    @GetMapping("/buscar/{idCalcado}")
+    public String buscarCalcado(@PathVariable int idCalcado, Model model){
+        CalcadosModel calcado = calcadosDAO.buscarCalcadoPorId(idCalcado);
+        model.addAttribute("calcado", calcado);
+        return "ExibeCalcado";
     }
 }

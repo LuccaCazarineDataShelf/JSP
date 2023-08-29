@@ -17,11 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+//@RequestMapping("/calcados")
 public class CalcadosWebController {
 
     @RequestMapping(value = "/calcadosModel", method = RequestMethod.GET)
     public ModelAndView cliente(){
-        return new ModelAndView("calcadosModel", "command", new CalcadosModel() );
+        return new ModelAndView("calcado", "command", new CalcadosModel() );
     }
     @RequestMapping(value = "/addCalcadosModel", method = RequestMethod.POST )
     public String adicionarCalcadosModel(
