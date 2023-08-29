@@ -2,12 +2,14 @@ package org.example.DAO;
 
 import org.example.ConexaoBanco.Conexao;
 import org.example.Model.CalcadosModel;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Repository
 public class CalcadosDAO extends CalcadosModel {
     public void adicionarCalcado(CalcadosModel calcado){
         try(Connection conexao = Conexao.conectar()){
@@ -32,7 +34,7 @@ public class CalcadosDAO extends CalcadosModel {
         }
     }
 
-    public void editarCalcado(){
+    public void editarCalcado(CalcadosModel calcado){
         try(Connection conexao = Conexao.conectar()){
             String sql = "UPDATE Calcados SET tamanho = ?, categoria = ?, cor = ?, preco = ?," +
                     " marca = ?, dataCadastro = ?, qtdEstoque = ?, descricao = ? " +
