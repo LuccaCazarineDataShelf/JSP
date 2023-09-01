@@ -1,11 +1,13 @@
 package org.example.Controller;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.example.Model.CalcadosModel;
 import org.example.DAO.CalcadosDAO;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,59 +18,75 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
-/*@Controller
-@RequestMapping("/calcados")*/
+@Controller
+@RequestMapping("/calcados")
 public class CalcadosController {
     private CalcadosDAO calcadosDAO;
+
+    public CalcadosController(){
+
+    }
 
     @Autowired
     public CalcadosController(CalcadosDAO calcadosDAO) {
         this.calcadosDAO = calcadosDAO;
     }
 
-    @GetMapping("/adicionar")
-    /*public void adicionarCalcado(float tamanho, String categoria, String cor, float preco, String marca, double dataCadastro, int qtdEstoque, String descricao, int calcadoId){
-        CalcadosModel calcadosModel = new CalcadosModel(tamanho, categoria, cor, preco, marca, dataCadastro, qtdEstoque, descricao, calcadoId);
-        CalcadosDAO calcadoDAO = new CalcadosDAO();
-        calcadoDAO.adicionarCalcado(calcadosModel);*/
-    public String adicionarCalcadoForm(Model model){
-        model.addAttribute("calcado", new CalcadosModel());
-        return "adicionarCalcadoForm";
-    }
     @PostMapping("/adicionar")
-    public String adicionarCalcado(@ModelAttribute CalcadosModel calcado){
-        calcadosDAO.adicionarCalcado(calcado);
-        return "redirect:/calcados/listar";
-    }
-    @GetMapping("/editar/{idCalcado}")
-    public String editarCalcadoForm(@PathVariable int idCalcado, Model model){
-        CalcadosModel calcado = calcadosDAO.buscarCalcadoPorId(idCalcado);
-        model.addAttribute("calcado", calcado);
-        return "editarCalcadoForm";
+    public String adicionarCalcado(@RequestBody Map<String, Object> payload){
+        CalcadosModel calcadosModel = new CalcadosModel();
+        String parametroTam = payload.get("tamanho").toString();
+        /*String parametroCat = payload.get("categoria").toString();
+        String parametroCor = payload.get("cor").toString();
+        String parametroPreco = payload.get("preco").toString();
+        String parametroMarca = payload.get("marca").toString();
+        String parametroDataCad = payload.get("dataCadastro").toString();
+        String parametroQtd = payload.get("qtdEstoque").toString();
+        String parametroDescricao = payload.get("descricao").toString();
+        String parametroId = payload.get("calcadoId").toString();*/
+        this.calcadosDAO.adicionarCalcado(calcadosModel);
+        return "";
     }
 
-    @RequestMapping("/editar/{idCalcado}")
-    /*public CalcadosModel buscarCalcado(int idCalcado){
-        return  calcadosDAO.buscarCalcadoPorId(idCalcado);
-    }*/
-    public String editarCalcado(@PathVariable int idCalcado, @ModelAttribute CalcadosModel calcado){
-        calcadosDAO.editarCalcado(calcado);
-        return "redirect:/calcados/listar";
+    @PostMapping("/editar")
+    public String editarCalcado(@RequestBody Map<String, Object> payload){
+       int calcadoId = Integer.parseInt(payload.get("calcadoId").toString());
+       CalcadosModel calcadoExistente = calcadosDAO.buscarCalcadoPorId(calcadoId);
+       if(calcadoExistente == null){
+           return "editar";
+       }
+       calcadoExistente.setTamanho(Float.parseFloat(payload.get("tamanho").toString()));
+       calcadoExistente.setCategoria(payload.get("categoria").toString());
+       calcadoExistente.setCor(payload.get("cor").toString());
+       calcadoExistente.setPreco(Float.parseFloat(payload.get("preco").toString()));
+       calcadoExistente.setMarca(payload.get("marca").toString());
+       calcadoExistente.setDataCadastro(Double.parseDouble(payload.get("dataCadastro").toString()));
+       calcadoExistente.setQtdEstoque(Integer.parseInt(payload.get("qtdEstoque").toString()));
+       calcadoExistente.setDescricao(payload.get("descricao").toString());
+
+       calcadosDAO.editarCalcado(calcadoExistente);
+
+       return "editarCalcado";
     }
-    /*
-    public void editarCalcado(int idCalcado, float novoTamanho, String novaCategoria, String novaCor, float novoPreco, String novaMarca, int novaQtdEstoque, String novaDescricao, int novoProdutoId){
-        CalcadosModel calcadosModel = new CalcadosModel(idCalcado, novoTamanho, novaCategoria, novaCor, novoPreco, novaMarca, novaQtdEstoque, novaDescricao);
-        calcadosDAO.adicionarCalcado(calcadosModel);
-    }*/
-    @GetMapping("/excluir/{idCalcado}")
-    public String excluirCalcado(@PathVariable int idCalcado) {
-        calcadosDAO.excluirCalcado(idCalcado);
-        return"redirect:/calcados/listar";
+
+    @PostMapping("/excluir")
+    public String excluirCalcado(@RequestBody Map<String, Object> payload) {
+        int calcadoId = Integer.parseInt(payload.get("calcadoId").toString());
+        CalcadosModel calcadoExistente = calcadosDAO.buscarCalcadoPorId(calcadoId);
+        if(calcadoExistente == null){
+            return "excluir";
+        }
+        calcadosDAO.excluirCalcado(calcadoId);
+        return "excluirCalcado";
     }
     @GetMapping("/buscar/{idCalcado}")
     public String buscarCalcado(@PathVariable int idCalcado, Model model){
-        CalcadosModel calcado = calcadosDAO.buscarCalcadoPorId(idCalcado);
-        model.addAttribute("calcado", calcado);
-        return "ExibeCalcado";
+        CalcadosModel calcadosModel = calcadosDAO.buscarCalcadoPorId(idCalcado);
+        if(calcadosModel != null){
+            model.addAttribute("calcadoModel", calcadosModel);
+            return "ExibeCalcado";
+        }else{
+            return "buscar";
+        }
     }
 }

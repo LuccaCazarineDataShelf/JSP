@@ -10,21 +10,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
-public class CalcadosDAO extends CalcadosModel {
+public class CalcadosDAO {
+    private Connection conexao;
+
+    public CalcadosDAO(){
+        conexao = Conexao.conectar();
+    }
     public void adicionarCalcado(CalcadosModel calcado){
         try(Connection conexao = Conexao.conectar()){
             String sql = "INSERT INTO Calcados (tamanho, categoria, cor, preco, marca, dataCadastro, qtdEstoque, descricao, calcadoId)" +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try(PreparedStatement stmt = conexao.prepareStatement(sql)){
-                stmt.setFloat(1, getTamanho());
-                stmt.setString(2, getCategoria());
-                stmt.setString(3, getCor());
-                stmt.setFloat(4, getPreco());
-                stmt.setString(5, getMarca());
-                stmt.setDouble(6, getDataCadastro());
-                stmt.setInt(7, getQtdEstoque());
-                stmt.setString(8, getDescricao());
-                stmt.setInt(9, getCalcadoId());
+                stmt.setFloat(1, calcado.getTamanho());
+                stmt.setString(2, calcado.getCategoria());
+                stmt.setString(3, calcado.getCor());
+                stmt.setFloat(4, calcado.getPreco());
+                stmt.setString(5, calcado.getMarca());
+                stmt.setDouble(6, calcado.getDataCadastro());
+                stmt.setInt(7, calcado.getQtdEstoque());
+                stmt.setString(8, calcado.getDescricao());
+                stmt.setInt(9, calcado.getCalcadoId());
 
                 stmt.executeUpdate();
                 System.out.println("Calçado adicionado com sucesso!");
@@ -40,15 +45,15 @@ public class CalcadosDAO extends CalcadosModel {
                     " marca = ?, dataCadastro = ?, qtdEstoque = ?, descricao = ? " +
                     "WHERE idCalcado = ?";
             try(PreparedStatement stmt = conexao.prepareStatement(sql)){
-                stmt.setFloat(1, getTamanho());
-                stmt.setString(2, this.getCategoria());
-                stmt.setString(3, this.getCor());
-                stmt.setFloat(4, this.getPreco());
-                stmt.setString(5, this.getMarca());
-                stmt.setDouble(6, this.getDataCadastro());
-                stmt.setInt(7, this.getQtdEstoque());
-                stmt.setString(8, this.getDescricao());
-                stmt.setInt(9, this.getCalcadoId());
+                stmt.setFloat(1, calcado.getTamanho());
+                stmt.setString(2, calcado.getCategoria());
+                stmt.setString(3, calcado.getCor());
+                stmt.setFloat(4, calcado.getPreco());
+                stmt.setString(5, calcado.getMarca());
+                stmt.setDouble(6, calcado.getDataCadastro());
+                stmt.setInt(7, calcado.getQtdEstoque());
+                stmt.setString(8, calcado.getDescricao());
+                stmt.setInt(9, calcado.getCalcadoId());
 
                 stmt.executeUpdate();
 
@@ -58,40 +63,42 @@ public class CalcadosDAO extends CalcadosModel {
             System.err.println("Erro ao editar calçado: " + e.getMessage());
         }
     }
+
     public void excluirCalcado(int idCalcado){
         try(Connection conexao = Conexao.conectar()){
-            String sql = "DELETE FROM Calcados where id = ?";
+            String sql = "DELETE FROM Calcados where idCalcado = ?";
             try(PreparedStatement stmt = conexao.prepareStatement(sql)){
-                stmt.setInt(1, this.getCalcadoId());
+                stmt.setInt(1, idCalcado);
                 int linhasAfetadas = stmt.executeUpdate();
                 if(linhasAfetadas > 0){
-                    System.out.println("Calçado excluido com sucesso!");
+                    System.out.println("Calçado excluído com sucesso!");
                 }else{
-                    System.out.println("Nenhum calçado encontrado com esse id.");
+                    System.out.println("Nenhum calçado encontrado com esse ID.");
                 }
             }
         } catch (SQLException e){
             System.err.println("Erro ao excluir o calçado: " + e.getMessage());
         }
     }
+
     public CalcadosModel buscarCalcadoPorId(int idCalcado){
         CalcadosModel calcado = null;
 
         try(Connection conexao = Conexao.conectar()){
-            String sql = "SELECT * FROM calcados WHERE idCalcado = ?";
+            String sql = "SELECT * FROM Calcados WHERE idCalcado = ?";
             try(PreparedStatement stmt = conexao.prepareStatement(sql)){
-                stmt.setInt(1, this.getCalcadoId());
+                stmt.setInt(1, idCalcado);
                 try(ResultSet resultado = stmt.executeQuery()){
                     if(resultado.next()){
                         calcado = new CalcadosModel(
                                 resultado.getFloat("tamanho"),
                                 resultado.getString("categoria"),
                                 resultado.getString("cor"),
-                                resultado.getFloat("preço"),
+                                resultado.getFloat("preco"),
                                 resultado.getString("marca"),
                                 resultado.getDouble("dataCadastro"),
                                 resultado.getInt("qtdEstoque"),
-                                resultado.getString("descrição"),
+                                resultado.getString("descricao"),
                                 resultado.getInt("calcadoId")
                         );
                     }
