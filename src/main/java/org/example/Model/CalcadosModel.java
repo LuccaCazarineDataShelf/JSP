@@ -16,13 +16,13 @@ public class CalcadosModel {
     private String cor;
     private float preco;
     private String marca;
-    private double dataCadastro;
+    private String dataCadastro;
     private int qtdEstoque;
     private String descricao;
     private int calcadoId;
 
 
-    public CalcadosModel(float tamanho, String categoria, String cor, float preco, String marca, double dataCadastro, int qtdEstoque, String descricao, int calcadoId) {
+    public CalcadosModel(float tamanho, String categoria, String cor, float preco, String marca, String dataCadastro, int qtdEstoque, String descricao, int calcadoId) {
         this.tamanho = tamanho;
         this.categoria = categoria;
         this.cor = cor;
@@ -77,11 +77,11 @@ public class CalcadosModel {
         this.marca = marca;
     }
 
-    public double getDataCadastro() {
+    public String getDataCadastro() {
         return dataCadastro;
     }
 
-    public void setDataCadastro(double dataCadastro) {
+    public void setDataCadastro(String dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
 

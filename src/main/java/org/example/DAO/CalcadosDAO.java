@@ -3,11 +3,14 @@ package org.example.DAO;
 import org.example.ConexaoBanco.Conexao;
 import org.example.Model.CalcadosModel;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 
 @Repository
 public class CalcadosDAO {
@@ -18,7 +21,7 @@ public class CalcadosDAO {
     }
     public void adicionarCalcado(CalcadosModel calcado){
         try(Connection conexao = Conexao.conectar()){
-            String sql = "INSERT INTO Calcados (tamanho, categoria, cor, preco, marca, dataCadastro, qtdEstoque, descricao, calcadoId)" +
+            String sql = "INSERT INTO DadosCalcados (tamanho, categoria, cor, preco, marca, dataCadastro, qtdEstoque, descricao, calcadoId)" +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try(PreparedStatement stmt = conexao.prepareStatement(sql)){
                 stmt.setFloat(1, calcado.getTamanho());
@@ -26,7 +29,7 @@ public class CalcadosDAO {
                 stmt.setString(3, calcado.getCor());
                 stmt.setFloat(4, calcado.getPreco());
                 stmt.setString(5, calcado.getMarca());
-                stmt.setDouble(6, calcado.getDataCadastro());
+                stmt.setString(6, calcado.getDataCadastro());
                 stmt.setInt(7, calcado.getQtdEstoque());
                 stmt.setString(8, calcado.getDescricao());
                 stmt.setInt(9, calcado.getCalcadoId());
@@ -41,7 +44,7 @@ public class CalcadosDAO {
 
     public void editarCalcado(CalcadosModel calcado){
         try(Connection conexao = Conexao.conectar()){
-            String sql = "UPDATE Calcados SET tamanho = ?, categoria = ?, cor = ?, preco = ?," +
+            String sql = "UPDATE DadosCalcados SET tamanho = ?, categoria = ?, cor = ?, preco = ?," +
                     " marca = ?, dataCadastro = ?, qtdEstoque = ?, descricao = ? " +
                     "WHERE idCalcado = ?";
             try(PreparedStatement stmt = conexao.prepareStatement(sql)){
@@ -50,7 +53,7 @@ public class CalcadosDAO {
                 stmt.setString(3, calcado.getCor());
                 stmt.setFloat(4, calcado.getPreco());
                 stmt.setString(5, calcado.getMarca());
-                stmt.setDouble(6, calcado.getDataCadastro());
+                stmt.setString(6, calcado.getDataCadastro());
                 stmt.setInt(7, calcado.getQtdEstoque());
                 stmt.setString(8, calcado.getDescricao());
                 stmt.setInt(9, calcado.getCalcadoId());
@@ -66,7 +69,7 @@ public class CalcadosDAO {
 
     public void excluirCalcado(int idCalcado){
         try(Connection conexao = Conexao.conectar()){
-            String sql = "DELETE FROM Calcados where idCalcado = ?";
+            String sql = "DELETE FROM DaadosCalcados where idCalcado = ?";
             try(PreparedStatement stmt = conexao.prepareStatement(sql)){
                 stmt.setInt(1, idCalcado);
                 int linhasAfetadas = stmt.executeUpdate();
@@ -85,7 +88,7 @@ public class CalcadosDAO {
         CalcadosModel calcado = null;
 
         try(Connection conexao = Conexao.conectar()){
-            String sql = "SELECT * FROM Calcados WHERE idCalcado = ?";
+            String sql = "SELECT * FROM DadosCalcados WHERE idCalcado = ?";
             try(PreparedStatement stmt = conexao.prepareStatement(sql)){
                 stmt.setInt(1, idCalcado);
                 try(ResultSet resultado = stmt.executeQuery()){
@@ -96,7 +99,7 @@ public class CalcadosDAO {
                                 resultado.getString("cor"),
                                 resultado.getFloat("preco"),
                                 resultado.getString("marca"),
-                                resultado.getDouble("dataCadastro"),
+                                resultado.getString("dataCadastro"),
                                 resultado.getInt("qtdEstoque"),
                                 resultado.getString("descricao"),
                                 resultado.getInt("calcadoId")

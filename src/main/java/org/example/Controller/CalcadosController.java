@@ -35,17 +35,17 @@ public class CalcadosController {
     @PostMapping("/adicionar")
     public String adicionarCalcado(@RequestBody Map<String, Object> payload){
         CalcadosModel calcadosModel = new CalcadosModel();
-        String parametroTam = payload.get("tamanho").toString();
-        /*String parametroCat = payload.get("categoria").toString();
-        String parametroCor = payload.get("cor").toString();
-        String parametroPreco = payload.get("preco").toString();
-        String parametroMarca = payload.get("marca").toString();
-        String parametroDataCad = payload.get("dataCadastro").toString();
-        String parametroQtd = payload.get("qtdEstoque").toString();
-        String parametroDescricao = payload.get("descricao").toString();
-        String parametroId = payload.get("calcadoId").toString();*/
+        calcadosModel.setTamanho(Float.parseFloat(payload.get("tamanho").toString()));
+        calcadosModel.setCategoria(payload.get("categoria").toString());
+        calcadosModel.setCor(payload.get("cor").toString());
+        calcadosModel.setPreco(Float.parseFloat(payload.get("preco").toString()));
+        calcadosModel.setMarca(payload.get("marca").toString());
+        calcadosModel.setDataCadastro(payload.get("dataCadastro").toString());
+        calcadosModel.setQtdEstoque(Integer.parseInt(payload.get("qtdEstoque").toString()));
+        calcadosModel.setDescricao(payload.get("descricao").toString());
+        calcadosModel.setCalcadoId(Integer.parseInt(payload.get("calcadoId").toString()));
         this.calcadosDAO.adicionarCalcado(calcadosModel);
-        return "";
+        return "adicionar";
     }
 
     @PostMapping("/editar")
@@ -60,7 +60,7 @@ public class CalcadosController {
        calcadoExistente.setCor(payload.get("cor").toString());
        calcadoExistente.setPreco(Float.parseFloat(payload.get("preco").toString()));
        calcadoExistente.setMarca(payload.get("marca").toString());
-       calcadoExistente.setDataCadastro(Double.parseDouble(payload.get("dataCadastro").toString()));
+       calcadoExistente.setDataCadastro(payload.get("dataCadastro").toString());
        calcadoExistente.setQtdEstoque(Integer.parseInt(payload.get("qtdEstoque").toString()));
        calcadoExistente.setDescricao(payload.get("descricao").toString());
 
