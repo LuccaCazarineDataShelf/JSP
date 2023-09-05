@@ -1,11 +1,8 @@
 package org.example.Model;
 
-import org.example.ConexaoBanco.Conexao;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CalcadosModel {
 
@@ -16,13 +13,20 @@ public class CalcadosModel {
     private String cor;
     private float preco;
     private String marca;
-    private double dataCadastro;
+    private Date dataCadastro;
     private int qtdEstoque;
     private String descricao;
     private int calcadoId;
 
-
-    public CalcadosModel(float tamanho, String categoria, String cor, float preco, String marca, double dataCadastro, int qtdEstoque, String descricao, int calcadoId) {
+    public void setDataCadastroString(String dataCadastroString) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            this.dataCadastro = dateFormat.parse(dataCadastroString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+    public CalcadosModel(float tamanho, String categoria, String cor, float preco, String marca, Date dataCadastro, int qtdEstoque, String descricao, int calcadoId) {
         this.tamanho = tamanho;
         this.categoria = categoria;
         this.cor = cor;
@@ -77,11 +81,11 @@ public class CalcadosModel {
         this.marca = marca;
     }
 
-    public double getDataCadastro() {
+    public Date getDataCadastro() {
         return dataCadastro;
     }
 
-    public void setDataCadastro(double dataCadastro) {
+    public void setDataCadastro(Date dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
 
