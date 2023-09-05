@@ -4,10 +4,13 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.example.Model.CalcadosModel;
 import org.example.DAO.CalcadosDAO;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,7 +43,15 @@ public class CalcadosController {
         calcadosModel.setCor(payload.get("cor").toString());
         calcadosModel.setPreco(Float.parseFloat(payload.get("preco").toString()));
         calcadosModel.setMarca(payload.get("marca").toString());
-        calcadosModel.setDataCadastro(payload.get("dataCadastro").toString());
+        SimpleDateFormat dateFormatInput = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dateFormatOutput = new SimpleDateFormat("yyyy-MM-dd");
+        try{
+            Date dataCadastro = dateFormatInput.parse(payload.get("dataCadastro").toString());
+            String dataCadastroFormatted = dateFormatOutput.format(dataCadastro);
+            calcadosModel.setDataCadastro(dataCadastro);
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
         calcadosModel.setQtdEstoque(Integer.parseInt(payload.get("qtdEstoque").toString()));
         calcadosModel.setDescricao(payload.get("descricao").toString());
         calcadosModel.setCalcadoId(Integer.parseInt(payload.get("calcadoId").toString()));
@@ -60,7 +71,15 @@ public class CalcadosController {
        calcadoExistente.setCor(payload.get("cor").toString());
        calcadoExistente.setPreco(Float.parseFloat(payload.get("preco").toString()));
        calcadoExistente.setMarca(payload.get("marca").toString());
-       calcadoExistente.setDataCadastro(payload.get("dataCadastro").toString());
+       SimpleDateFormat dateFormatInput = new SimpleDateFormat("dd/MM/yyyy");
+       SimpleDateFormat dateFormatOutput = new SimpleDateFormat("yyyy-MM-dd");
+       try {
+           Date dataCadastro = dateFormatInput.parse(payload.get("dataCadastro").toString());
+           String dataCadastroFormatted = dateFormatOutput.format(dataCadastro);
+           calcadoExistente.setDataCadastro(dataCadastro);
+       }catch (ParseException e){
+           e.printStackTrace();
+       }
        calcadoExistente.setQtdEstoque(Integer.parseInt(payload.get("qtdEstoque").toString()));
        calcadoExistente.setDescricao(payload.get("descricao").toString());
 
@@ -80,8 +99,8 @@ public class CalcadosController {
         return "excluirCalcado";
     }
     @GetMapping("/buscar/{idCalcado}")
-    public String buscarCalcado(@PathVariable int idCalcado, Model model){
-        CalcadosModel calcadosModel = calcadosDAO.buscarCalcadoPorId(idCalcado);
+    public String buscarCalcado(@PathVariable int calcadoId, Model model){
+        CalcadosModel calcadosModel = calcadosDAO.buscarCalcadoPorId(calcadoId);
         if(calcadosModel != null){
             model.addAttribute("calcadoModel", calcadosModel);
             return "ExibeCalcado";
