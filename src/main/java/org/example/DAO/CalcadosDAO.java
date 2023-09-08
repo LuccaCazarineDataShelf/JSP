@@ -29,7 +29,6 @@ public class CalcadosDAO {
                 stmt.setDate(6, (Date) calcado.getDataCadastro());
                 stmt.setInt(7, calcado.getQtdEstoque());
                 stmt.setString(8, calcado.getDescricao());
-                stmt.setInt(9, calcado.getCalcadoId());
 
                 stmt.executeUpdate();
                 System.out.println("Calçado adicionado com sucesso!");
@@ -53,7 +52,6 @@ public class CalcadosDAO {
                 stmt.setDate(6, (Date) calcado.getDataCadastro());
                 stmt.setInt(7, calcado.getQtdEstoque());
                 stmt.setString(8, calcado.getDescricao());
-                stmt.setInt(9, calcado.getCalcadoId());
 
                 stmt.executeUpdate();
 
@@ -98,8 +96,7 @@ public class CalcadosDAO {
                                 resultado.getString("marca"),
                                 resultado.getDate("dataCadastro"),
                                 resultado.getInt("qtdEstoque"),
-                                resultado.getString("descricao"),
-                                resultado.getInt("calcadoId")
+                                resultado.getString("descricao")
                         );
                     }
                 }

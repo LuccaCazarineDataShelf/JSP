@@ -16,7 +16,6 @@ public class CalcadosModel {
     private Date dataCadastro;
     private int qtdEstoque;
     private String descricao;
-    private int calcadoId;
 
     public void setDataCadastroString(String dataCadastroString) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -26,7 +25,7 @@ public class CalcadosModel {
             e.printStackTrace();
         }
     }
-    public CalcadosModel(float tamanho, String categoria, String cor, float preco, String marca, Date dataCadastro, int qtdEstoque, String descricao, int calcadoId) {
+    public CalcadosModel(float tamanho, String categoria, String cor, float preco, String marca, Date dataCadastro, int qtdEstoque, String descricao) {
         this.tamanho = tamanho;
         this.categoria = categoria;
         this.cor = cor;
@@ -35,7 +34,6 @@ public class CalcadosModel {
         this.dataCadastro = dataCadastro;
         this.qtdEstoque = qtdEstoque;
         this.descricao = descricao;
-        this.calcadoId = calcadoId;
     }
 
     public CalcadosModel(int idCalcado, float novoTamanho, String novaCategoria, String novaCor, float novoPreco, String novaMarca, int novaQtdEstoque, String novaDescricao) {
@@ -103,13 +101,5 @@ public class CalcadosModel {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-
-    public int getCalcadoId() {
-        return calcadoId;
-    }
-
-    public void setCalcadoId(int calcadoId) {
-        this.calcadoId = calcadoId;
     }
 }
