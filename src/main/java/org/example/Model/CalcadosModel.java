@@ -16,6 +16,10 @@ public class CalcadosModel {
     private Date dataCadastro;
     private int qtdEstoque;
     private String descricao;
+    private int calcadoIdAutoIncrement;
+
+    public CalcadosModel(float tamanho, String categoria, String cor, float preco, String marca, java.sql.Date dataCadastro, int qtdEstoque, String descricao) {
+    }
 
     public void setDataCadastroString(String dataCadastroString) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -25,7 +29,7 @@ public class CalcadosModel {
             e.printStackTrace();
         }
     }
-    public CalcadosModel(float tamanho, String categoria, String cor, float preco, String marca, Date dataCadastro, int qtdEstoque, String descricao) {
+    public CalcadosModel(float tamanho, String categoria, String cor, float preco, String marca, Date dataCadastro, int qtdEstoque, String descricao, int calcadoIdAutoIncrement) {
         this.tamanho = tamanho;
         this.categoria = categoria;
         this.cor = cor;
@@ -34,10 +38,11 @@ public class CalcadosModel {
         this.dataCadastro = dataCadastro;
         this.qtdEstoque = qtdEstoque;
         this.descricao = descricao;
+        this.calcadoIdAutoIncrement = calcadoIdAutoIncrement;
     }
 
-    public CalcadosModel(int idCalcado, float novoTamanho, String novaCategoria, String novaCor, float novoPreco, String novaMarca, int novaQtdEstoque, String novaDescricao) {
-    }
+    /*public CalcadosModel(int idCalcado, float novoTamanho, String novaCategoria, String novaCor, float novoPreco, String novaMarca, int novaQtdEstoque, String novaDescricao) {
+    }*/
 
     public float getTamanho() {
         return tamanho;
@@ -101,5 +106,11 @@ public class CalcadosModel {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+    public void setCalcadoIdAutoIncrement(int calcadoIdAutoIncrement){
+        this.calcadoIdAutoIncrement = calcadoIdAutoIncrement;
+    }
+    public int getCalcadoIdAutoIncrement(){
+        return calcadoIdAutoIncrement;
     }
 }

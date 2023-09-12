@@ -8,6 +8,10 @@ import java.sql.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class CalcadosDAO {
@@ -18,8 +22,8 @@ public class CalcadosDAO {
     }
     public void adicionarCalcado(CalcadosModel calcado){
         try(Connection conexao = Conexao.conectar()){
-            String sql = "INSERT INTO DadosCalcados (tamanho, categoria, cor, preco, marca, dataCadastro, qtdEstoque, descricao, calcadoId)" +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO DadosCalcados (tamanho, categoria, cor, preco, marca, dataCadastro, qtdEstoque, descricao)" +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             try(PreparedStatement stmt = conexao.prepareStatement(sql)){
                 stmt.setFloat(1, calcado.getTamanho());
                 stmt.setString(2, calcado.getCategoria());
@@ -31,6 +35,7 @@ public class CalcadosDAO {
                 stmt.setString(8, calcado.getDescricao());
 
                 stmt.executeUpdate();
+
                 System.out.println("Calçado adicionado com sucesso!");
             }
         }catch (SQLException e){
@@ -42,7 +47,7 @@ public class CalcadosDAO {
         try(Connection conexao = Conexao.conectar()){
             String sql = "UPDATE DadosCalcados SET tamanho = ?, categoria = ?, cor = ?, preco = ?," +
                     " marca = ?, dataCadastro = ?, qtdEstoque = ?, descricao = ? " +
-                    "WHERE calcadoId = ?";
+                    "WHERE calcadoIdAutoIncrement = ?";
             try(PreparedStatement stmt = conexao.prepareStatement(sql)){
                 stmt.setFloat(1, calcado.getTamanho());
                 stmt.setString(2, calcado.getCategoria());
@@ -52,6 +57,7 @@ public class CalcadosDAO {
                 stmt.setDate(6, (Date) calcado.getDataCadastro());
                 stmt.setInt(7, calcado.getQtdEstoque());
                 stmt.setString(8, calcado.getDescricao());
+                //stmt.setInt(9, calcado.getCalcadoIdAutoIncrement());
 
                 stmt.executeUpdate();
 
@@ -64,7 +70,7 @@ public class CalcadosDAO {
 
     public void excluirCalcado(int calcadoId){
         try(Connection conexao = Conexao.conectar()){
-            String sql = "DELETE FROM DaadosCalcados where idCalcado = ?";
+            String sql = "DELETE FROM DadosCalcados where idCalcado = ?";
             try(PreparedStatement stmt = conexao.prepareStatement(sql)){
                 stmt.setInt(1, calcadoId);
                 int linhasAfetadas = stmt.executeUpdate();
@@ -83,7 +89,7 @@ public class CalcadosDAO {
         CalcadosModel calcado = null;
 
         try(Connection conexao = Conexao.conectar()){
-            String sql = "SELECT * FROM DadosCalcados WHERE CalcadoId = ?";
+            String sql = "SELECT * FROM DadosCalcados WHERE calcadoIdAutoIncrement = ?";
             try(PreparedStatement stmt = conexao.prepareStatement(sql)){
                 stmt.setInt(1, calcadoId);
                 try(ResultSet resultado = stmt.executeQuery()){
@@ -96,7 +102,8 @@ public class CalcadosDAO {
                                 resultado.getString("marca"),
                                 resultado.getDate("dataCadastro"),
                                 resultado.getInt("qtdEstoque"),
-                                resultado.getString("descricao")
+                                resultado.getString("descricao"),
+                                resultado.getInt("calcadooIdAutoIncrement")
                         );
                     }
                 }
@@ -106,6 +113,50 @@ public class CalcadosDAO {
         }
         return calcado;
     }
-    public void filtrarCalcado(){
+    public List <CalcadosModel> filtrarCalcados(Map<String, String> filtros){
+        String sql = "SELECT * FROM DadosCalcados WHERE 1=1";
+
+        if(filtros.containsKey("marca")){
+            sql += "AND marca = '" + filtros.get("marca") + "'";
+        }
+        if(filtros.containsKey("tamanho")){
+            sql += "AND tamanho " + filtros.get("tamanho");
+        }
+        if(filtros.containsKey("categoria")){
+            sql += "AND categoria " + filtros.get("categoria");
+        }
+        if(filtros.containsKey("cor")){
+            sql += "AND cor " + filtros.get("cor") ;
+        }
+        if(filtros.containsKey("precoMin")){
+            sql += "AND preco >= " + filtros.get("precoMin");
+        }
+        if(filtros.containsKey("precoMax")){
+            sql += "AND preco <= " + filtros.get("precoMax");
+        }
+
+        try (Connection conexao = Conexao.conectar();
+             PreparedStatement stmt = conexao.prepareStatement(sql);
+             ResultSet resultado = stmt.executeQuery()) {
+
+            List<CalcadosModel> calcadosFiltrados = new ArrayList<>();
+            while (resultado.next()){
+                CalcadosModel calcado = new CalcadosModel(
+                        resultado.getFloat("tamanho"),
+                        resultado.getString("categoria"),
+                        resultado.getString("cor"),
+                        resultado.getFloat("preco"),
+                        resultado.getString("marca"),
+                        resultado.getDate("dataCadastro"),
+                        resultado.getInt("qtdEstoque"),
+                        resultado.getString("descricao")
+                );
+                calcadosFiltrados.add(calcado);
+            }
+            return calcadosFiltrados;
+        }catch (SQLException e ){
+            System.err.println("Erro ao filtrar calcados: " + e.getMessage());
+            return Collections.emptyList();
+        }
     }
 }

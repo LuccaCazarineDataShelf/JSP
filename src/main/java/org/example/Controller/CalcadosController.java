@@ -62,11 +62,9 @@ public class CalcadosController {
 
     @PostMapping("/editar")
     public String editarCalcado(@RequestBody Map<String, Object> payload){
-       int calcadoId = Integer.parseInt(payload.get("calcadoId").toString());
-       CalcadosModel calcadoExistente = calcadosDAO.buscarCalcadoPorId(calcadoId);
-       if(calcadoExistente == null){
-           return "editar";
-       }
+
+        CalcadosModel calcadoExistente = new CalcadosModel();
+
        calcadoExistente.setTamanho(Float.parseFloat(payload.get("tamanho").toString()));
        calcadoExistente.setCategoria(payload.get("categoria").toString());
        calcadoExistente.setCor(payload.get("cor").toString());
@@ -111,5 +109,10 @@ public class CalcadosController {
         }else{
             return "buscar";
         }
+    }
+    @GetMapping("/filtrar")
+    public List<CalcadosModel> filtrarCalcados(@RequestParam Map<String, String> filtros){
+        List<CalcadosModel> calcadosFiltrados = calcadosDAO.filtrarCalcados(filtros);
+        return calcadosFiltrados;
     }
 }
