@@ -68,11 +68,11 @@ public class CalcadosDAO {
         }
     }
 
-    public void excluirCalcado(int calcadoId){
+    public void excluirCalcado(int calcadoIdAutoIncrement){
         try(Connection conexao = Conexao.conectar()){
-            String sql = "DELETE FROM DadosCalcados where idCalcado = ?";
+            String sql = "DELETE FROM DadosCalcados where calcadoIdAutoIncrement = ?";
             try(PreparedStatement stmt = conexao.prepareStatement(sql)){
-                stmt.setInt(1, calcadoId);
+                stmt.setInt(1, calcadoIdAutoIncrement);
                 int linhasAfetadas = stmt.executeUpdate();
                 if(linhasAfetadas > 0){
                     System.out.println("Calçado excluído com sucesso!");

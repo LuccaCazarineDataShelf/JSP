@@ -94,16 +94,15 @@ public class CalcadosController {
        return "editarCalcado";
     }
 
-   /* @PostMapping("/excluir")
-    public String excluirCalcado(@RequestBody Map<String, Object> payload) {
-        int calcadoId = Integer.parseInt(payload.get("calcadoId").toString());
-        CalcadosModel calcadoExistente = calcadosDAO.buscarCalcadoPorId(calcadoId);
+    @PostMapping("/excluir/{calcadoIdAutoIncrement}")
+    public String excluirCalcado(@PathVariable int calcadoIdAutoIncrement) {
+        CalcadosModel calcadoExistente = calcadosDAO.buscarCalcadoPorId(calcadoIdAutoIncrement);
         if(calcadoExistente == null){
             return "excluir";
         }
-        calcadosDAO.excluirCalcado(calcadoId);
+        calcadosDAO.excluirCalcado(calcadoIdAutoIncrement);
         return "excluirCalcado";
-    }*/
+    }
 
     @GetMapping("/filtrar")
     public List<CalcadosModel> filtrarCalcados(@RequestParam Map<String, String> filtros){
