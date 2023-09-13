@@ -57,7 +57,7 @@ public class CalcadosDAO {
                 stmt.setDate(6, (Date) calcado.getDataCadastro());
                 stmt.setInt(7, calcado.getQtdEstoque());
                 stmt.setString(8, calcado.getDescricao());
-                //stmt.setInt(9, calcado.getCalcadoIdAutoIncrement());
+                stmt.setInt(9, calcado.getCalcadoIdAutoIncrement());
 
                 stmt.executeUpdate();
 
@@ -85,13 +85,14 @@ public class CalcadosDAO {
         }
     }
 
-    public CalcadosModel buscarCalcadoPorId(int calcadoId){
+    public CalcadosModel buscarCalcadoPorId(int calcadoIdAutoIncrement){
         CalcadosModel calcado = null;
 
         try(Connection conexao = Conexao.conectar()){
             String sql = "SELECT * FROM DadosCalcados WHERE calcadoIdAutoIncrement = ?";
+
             try(PreparedStatement stmt = conexao.prepareStatement(sql)){
-                stmt.setInt(1, calcadoId);
+                stmt.setInt(1, calcadoIdAutoIncrement);
                 try(ResultSet resultado = stmt.executeQuery()){
                     if(resultado.next()){
                         calcado = new CalcadosModel(
@@ -103,7 +104,7 @@ public class CalcadosDAO {
                                 resultado.getDate("dataCadastro"),
                                 resultado.getInt("qtdEstoque"),
                                 resultado.getString("descricao"),
-                                resultado.getInt("calcadooIdAutoIncrement")
+                                resultado.getInt("calcadoIdAutoIncrement")
                         );
                     }
                 }
